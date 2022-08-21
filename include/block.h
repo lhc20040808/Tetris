@@ -21,5 +21,5 @@ typedef struct{
 
 extern Block shapes[];
 
-extern void print_block_of_all_type(int x, int y, Block *b);
+extern void print_all_type_of_block(int x, int y, Block *b);
 #endif

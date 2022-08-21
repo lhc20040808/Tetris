@@ -4,6 +4,32 @@
 
 #include "include/keyboard.h"
 
+void (*down_ptr)(void) = NULL;
+
+void (*left_ptr)(void) = NULL;
+
+void (*right_ptr)(void) = NULL;
+
+void (*enter_ptr)(void) = NULL;
+
+void (*quit_ptr)(void) = NULL;
+
+/**
+ * 初始化键盘监听
+ * @param down 向下建的
+ * @param left
+ * @param right
+ * @param quit
+ */
+void init_key_control(void (*down)(void), void (*left)(void), void (*right)(void),
+                      void (*enter)(void), void (*quit)(void)) {
+    down_ptr = down;
+    left_ptr = left;
+    right_ptr = right;
+    enter_ptr = enter;
+    quit_ptr = quit;
+}
+
 int get_ch() {
     struct termios term_raw, term_old;
     //保存当前属性
@@ -18,31 +44,29 @@ int get_ch() {
     return ch;
 }
 
-void key_control() {
+void start_key_control() {
     int ch;
     while (1) {
         ch = get_ch();
         if (ch == 'q' || ch == 'Q') {
+            quit_ptr();
             break;
         } else if (ch == '\r') {
-            printf("down\n");
+            enter_ptr();
         } else if (ch == '\33') {
             //在Linux终端读取^[为ESC，用'\33'表示(八进制)
             ch = getchar();
             if (ch == '[') {
                 ch = getchar();
                 switch (ch) {
-                    case 'A':
-                        printf("up\n");
-                        break;
                     case 'B':
-                        printf("down\n");
+                        down_ptr();
                         break;
                     case 'C':
-                        printf("right\n");
+                        right_ptr();
                         break;
                     case 'D':
-                        printf("left\n");
+                        left_ptr();
                         break;
                     default:
                         break;
@@ -50,10 +74,6 @@ void key_control() {
             }
         }
     }
-}
-
-int main() {
-    key_control();
 }
 
 

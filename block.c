@@ -175,8 +175,13 @@ Block shapes[BLOCK_SIZE] =
                 }
         };
 
-//以x,y坐标为起点，打印块的所有图形
-void print_block_of_all_type(int x, int y, Block *b) {
+/**
+ *
+ * @param x 打印的横坐标起点
+ * @param y 打印的纵坐标起点
+ * @param b 待打印的方块
+ */
+void print_all_type_of_block(int x, int y, Block *b) {
     int move_x = x;
     int move_y = y;
     for (int i = 0; i < b->state_count; i++) {
