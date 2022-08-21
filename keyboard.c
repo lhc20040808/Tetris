@@ -14,8 +14,6 @@ void (*right_ptr)(void) = NULL;
 
 void (*enter_ptr)(void) = NULL;
 
-void (*quit_ptr)(void) = NULL;
-
 /**
  * 初始化键盘监听
  * @param down 向下建的
@@ -24,13 +22,12 @@ void (*quit_ptr)(void) = NULL;
  * @param quit
  */
 void init_key_control(void (*up)(void), void (*down)(void), void (*left)(void), void (*right)(void),
-                      void (*enter)(void), void (*quit)(void)) {
+                      void (*enter)(void)) {
     up_ptr = up;
     down_ptr = down;
     left_ptr = left;
     right_ptr = right;
     enter_ptr = enter;
-    quit_ptr = quit;
 }
 
 int get_ch() {
@@ -52,7 +49,6 @@ void start_key_control() {
     while (1) {
         ch = get_ch();
         if (ch == 'q' || ch == 'Q') {
-            quit_ptr();
             break;
         } else if (ch == '\r') {
             enter_ptr();
