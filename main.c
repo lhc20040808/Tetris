@@ -1,7 +1,9 @@
 #include <stdio.h>
-#include "include/block.h"
 #include <time.h>
 #include <stdlib.h>
+#include <sys/time.h>
+#include <signal.h>
+#include "include/block.h"
 #include "include/keyboard.h"
 #include "include/canvas.h"
 
@@ -73,25 +75,39 @@ void key_enter() {
     printf("enter\n");
 }
 
-void init_game_data() {
+void sig_handler(int signum) {
+    key_down();
+}
+
+void init_next_index() {
     srandom(time(NULL));
     if (next_block_index < 0) {
         next_block_index = (int) random() % BLOCK_SIZE;
     }
 }
 
+void start_timer(int interval) {
+    signal(SIGALRM, sig_handler);
+    struct itimerval timer_val = {{0, interval},
+                                  {0, 500 * 1000}};
+    setitimer(ITIMER_REAL, &timer_val, NULL);
+}
+
+void start_game() {
+    start_timer(800 * 1000);//启动定时器
+    start_key_control();//启动键盘监听，进入死循环直到按q退出
+}
+
 int main(int argc, const char *argv[]) {
-    init_game_data();
-    init_game_ui();
-    printf("\033[?25l");//隐藏光标
-    //注册键盘监听
-    init_key_control(key_up, key_down, key_left, key_right, key_enter);
+    init_next_index();
+    init_game_ui();//绘制游戏Ui
+    init_key_control(key_up, key_down, key_left, key_right, key_enter);//注册键盘监听
     //初始化一个块
     cur_m_block = malloc(sizeof(Move_Block));
     generate_blocks(cur_m_block);
     show_next_block();
     print_block(cur_m_block);//显示块
-    start_key_control();//启动键盘监听
+    start_game();
     printf("\033[?25h");//显示光标
     return 0;
 }

@@ -10,6 +10,7 @@ void drawInfo(int score, int level) {
  * 绘制游戏界面UI
  */
 void init_game_ui() {
+    printf("\033[?25l");//隐藏光标
     printf("\033[2J");//清屏
     //绘制上下两条竖线
     for (int i = CANVAS_START_X; i <= CANVAS_END_X; i++) {

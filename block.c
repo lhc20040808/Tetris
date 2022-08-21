@@ -234,6 +234,7 @@ void print_block(Move_Block *m_block) {
 
         move_x += 2;
     }
+    fflush(NULL);
 }
 
 void erase_block(Move_Block *m_block) {
