@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <termios.h>
 
-void init_key_control(void (*down)(void), void (*left)(void), void (*right)(void),
+void init_key_control(void (*up)(void),void (*down)(void), void (*left)(void), void (*right)(void),
                       void (*enter)(void), void (*quit)(void));
 
 void start_key_control();

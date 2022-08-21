@@ -241,11 +241,13 @@ void erase_block(Move_Block *m_block) {
 
         if (m_block->cur_block->shape[curState][i] == 1) {
             printf("\033[%d;%dH", move_y, move_x);
-            printf(" ");
+            printf("  ");//绘制图形的时候用的[]，占两个字符，所以擦除需要两个空格
             printf("\033[0m");
         }
         move_x += 2;
     }
+
+    fflush(NULL);
 }
 
 /**
@@ -253,18 +255,11 @@ void erase_block(Move_Block *m_block) {
  * @param moveBlock
  * @param right 0朝左旋转，1朝右旋转
  */
-void block_rotate(Move_Block *moveBlock, int right) {
+void block_rotate(Move_Block *moveBlock) {
     //删除原图像
     erase_block(moveBlock);
     //旋转
-    if (right) {
-        moveBlock->cur_state = (moveBlock->cur_state + 1) % (moveBlock->cur_block->state_count);
-    } else {
-        moveBlock->cur_state--;
-        if (moveBlock->cur_state < 0) {
-            moveBlock->cur_state = moveBlock->cur_block->state_count - 1;
-        }
-    }
+    moveBlock->cur_state = (moveBlock->cur_state + 1) % (moveBlock->cur_block->state_count);
     //绘制图像
     print_block(moveBlock);
 }

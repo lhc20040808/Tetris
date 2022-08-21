@@ -4,6 +4,8 @@
 
 #include "include/keyboard.h"
 
+void (*up_ptr)(void) = NULL;
+
 void (*down_ptr)(void) = NULL;
 
 void (*left_ptr)(void) = NULL;
@@ -21,8 +23,9 @@ void (*quit_ptr)(void) = NULL;
  * @param right
  * @param quit
  */
-void init_key_control(void (*down)(void), void (*left)(void), void (*right)(void),
+void init_key_control(void (*up)(void), void (*down)(void), void (*left)(void), void (*right)(void),
                       void (*enter)(void), void (*quit)(void)) {
+    up_ptr = up;
     down_ptr = down;
     left_ptr = left;
     right_ptr = right;
@@ -59,6 +62,9 @@ void start_key_control() {
             if (ch == '[') {
                 ch = getchar();
                 switch (ch) {
+                    case 'A':
+                        up_ptr();
+                        break;
                     case 'B':
                         down_ptr();
                         break;

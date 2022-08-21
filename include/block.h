@@ -7,19 +7,30 @@
 
 #define SHAPE_SIZE 16
 
-typedef struct{
-	int state_count;//一共有多少种状态
-	int (*shape)[SHAPE_SIZE]; //不同形状的图形长度等于[state_count][16]
-}Block;
+typedef struct {
+    int state_count;//一共有多少种状态
+    int (*shape)[SHAPE_SIZE]; //不同形状的图形长度等于[state_count][16]
+} Block;
 
-typedef struct{
-	int x;//当前x坐标
-	int y;//当前y坐标
-	int cur_state;//当前状态
-	Block* cur_block;
-}Move_Block;
+typedef struct {
+    int x;//当前x坐标
+    int y;//当前y坐标
+    int cur_state;//当前状态
+    Block *cur_block;
+} Move_Block;
 
 extern Block shapes[];
 
 extern void print_all_type_of_block(int x, int y, Block *b);
+
+extern void block_rotate(Move_Block *moveBlock);
+
+extern void block_move_down(Move_Block *moveBlock);
+
+extern void block_move_left(Move_Block *moveBlock);
+
+extern void block_move_right(Move_Block *moveBlock);
+
+extern void print_block(Move_Block *m_block);
+
 #endif

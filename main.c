@@ -7,10 +7,11 @@
 #define START_X 6
 #define START_Y 3
 
+Move_Block *cur_m_block = NULL;
 
 void print_blocks() {
-    int x = 6;
-    int y = 3;
+    int x = START_X;
+    int y = START_Y;
 
     for (int i = 0; i < BLOCK_SIZE; i++) {
         print_all_type_of_block(x, y, &shapes[i]);
@@ -35,16 +36,28 @@ void generate_blocks(Move_Block *m_block) {
     m_block->cur_block = &shapes[i_block];
 }
 
+void key_up() {
+    if (cur_m_block) {
+        block_rotate(cur_m_block);
+    }
+}
+
 void key_down() {
-    printf("down\n");
+    if (cur_m_block) {
+        block_move_down(cur_m_block);
+    }
 }
 
 void key_left() {
-    printf("left\n");
+    if (cur_m_block) {
+        block_move_left(cur_m_block);
+    }
 }
 
 void key_right() {
-    printf("right\n");
+    if (cur_m_block) {
+        block_move_right(cur_m_block);
+    }
 }
 
 void key_enter() {
@@ -56,9 +69,16 @@ void key_quit() {
 }
 
 int main(int argc, const char *argv[]) {
-//    print_blocks();
-    init_key_control(key_down, key_left, key_right, key_enter, key_quit);
-    start_key_control();
+    printf("\033[2J");//清屏
+    printf("\033[?25l");//隐藏光标
+    //注册键盘监听
+    init_key_control(key_up, key_down, key_left, key_right, key_enter, key_quit);
+    //初始化一个块
+    cur_m_block = malloc(sizeof(Move_Block));
+    generate_blocks(cur_m_block);
+    print_block(cur_m_block);//显示块
+    start_key_control();//启动键盘监听
+    printf("\033[?25h");//显示光标
     return 0;
 }
 
