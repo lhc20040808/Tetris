@@ -9,6 +9,7 @@
 
 typedef struct {
     int state_count;//一共有多少种状态
+    int color;//vt100背景色值
     int (*shape)[SHAPE_SIZE]; //不同形状的图形长度等于[state_count][16]
 } Block;
 

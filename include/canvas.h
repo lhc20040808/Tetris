@@ -32,14 +32,17 @@
 #define CANVAS_SCORE_Y 18
 #define CANVAS_LEVEL_Y 22
 
-#define BLOCK_SHOW_X 23
+#define BLOCK_SHOW_X 24
 #define BLOCK_SHOW_Y 6
+
+#define NEXT_BLOCK_X 46
+#define NEXT_BLOCK_Y 8
 
 #define BOUNDARY_START_X (CANVAS_START_X + 2)
 #define BOUNDARY_START_Y (CANVAS_START_Y + 1)
 #define BOUNDARY_END_X (CANVAS_GAME_DIVISION_X - 1)
 #define BOUNDARY_END_Y (CANVAS_END_Y - 1)
 
-extern void draw_game_ui();
+extern void init_game_ui();
 
 #endif //TETRIS_CANVAS_H

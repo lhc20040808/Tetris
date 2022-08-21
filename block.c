@@ -141,36 +141,43 @@ Block shapes[BLOCK_SIZE] =
                 //方块
                 {
                         1,//方块只有一个状态
+                        40,
                         shape1
                 },
                 //竖
                 {
                         2,//竖有两个状态
+                        41,
                         shape2
                 },
                 //反Z
                 {
                         2,
+                        42,
                         shape3
                 },
                 //正Z
                 {
                         2,
+                        43,
                         shape4
                 },
                 //正L
                 {
                         4,
+                        44,
                         shape5
                 },
                 //反L
                 {
                         4,
+                        45,
                         shape6
                 },
                 //T
                 {
                         4,
+                        46,
                         shape7
                 }
         };
@@ -194,7 +201,7 @@ void print_all_type_of_block(int x, int y, Block *b) {
 
             if (b->shape[i][j] == 1) {
                 printf("\033[%d;%dH", move_y, move_x);
-                printf("\033[%dm[]", 43);
+                printf("\033[%dm[]", b->color);
                 printf("\033[0m");
             }
 
@@ -221,7 +228,7 @@ void print_block(Move_Block *m_block) {
 
         if (m_block->cur_block->shape[curState][i] == 1) {
             printf("\033[%d;%dH", move_y, move_x);
-            printf("\033[%dm[]", 43);
+            printf("\033[%dm[]", m_block->cur_block->color);
             printf("\033[0m");
         }
 

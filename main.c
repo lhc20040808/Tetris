@@ -63,7 +63,7 @@ void key_enter() {
 }
 
 int main(int argc, const char *argv[]) {
-    draw_game_ui();
+    init_game_ui();
     printf("\033[?25l");//隐藏光标
     //注册键盘监听
     init_key_control(key_up, key_down, key_left, key_right, key_enter);
