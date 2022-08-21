@@ -36,7 +36,7 @@
 #define BLOCK_SHOW_Y 6
 
 #define NEXT_BLOCK_X 46
-#define NEXT_BLOCK_Y 8
+#define NEXT_BLOCK_Y 8//这里Hard Code不能保证所有图形居中。但不是练习重点，就不花太多时间调了。
 
 #define BOUNDARY_START_X (CANVAS_START_X + 2)
 #define BOUNDARY_START_Y (CANVAS_START_Y + 1)
