@@ -99,7 +99,12 @@ void key_enter() {
     if (!cur_m_block) {
         return;
     }
-    printf("enter\n");
+
+    while (1) {
+        if (block_move_down(cur_m_block)) {
+            break;
+        }
+    }
 }
 
 /**
@@ -107,7 +112,7 @@ void key_enter() {
  * @param signum
  */
 void sig_handler(int signum) {
-    if(signum != SIGALRM){
+    if (signum != SIGALRM) {
         return;
     }
     if (check_end_game()) {

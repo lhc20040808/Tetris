@@ -51,7 +51,7 @@ extern void init_game_ui();
 
 extern void block_rotate(Move_Block *moveBlock);
 
-extern void block_move_down(Move_Block *moveBlock);
+extern int block_move_down(Move_Block *moveBlock);
 
 extern void block_move_left(Move_Block *moveBlock);
 
@@ -60,5 +60,7 @@ extern void block_move_right(Move_Block *moveBlock);
 extern void erase_next_area();
 
 extern int has_enough_area(Move_Block *moveBlock, int next_x, int next_y);
+
+int check_area(Block *block, int state, int x, int y);
 
 #endif //TETRIS_CANVAS_H

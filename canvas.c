@@ -112,8 +112,15 @@ void block_rotate(Move_Block *moveBlock) {
     int state_count = moveBlock->cur_block->state_count;
     int next_state = (cur_state + 1) % (state_count);
 
-    //TODO 边界检查
-    //这边写简单点，如果没有足够旋转空间，则返回
+    //如果旋转后，方块的宽度超过右边界则不旋转
+    if (moveBlock->x + moveBlock->cur_block->shape[next_state][SHAPE_SIZE] * 2 - 1 > BOUNDARY_END_X) {
+        return;
+    }
+
+    //如果旋转后没有足够空间，则不旋转
+    if (!check_area(moveBlock->cur_block, next_state, moveBlock->x, moveBlock->y)) {
+        return;
+    }
 
     //删除原图像
     erase_block(moveBlock);
@@ -123,23 +130,17 @@ void block_rotate(Move_Block *moveBlock) {
     print_block(moveBlock);
 }
 
-/**
- * 判断当前方块下方是否还有足够的下落空间
- * @param moveBlock
- * @return 0 没有足够下落空间 1 有足够下落空间
- */
-int has_enough_area(Move_Block *moveBlock, int next_x, int next_y) {
-    int line = next_y - BOUNDARY_START_Y;
-    int column = next_x - BOUNDARY_START_X;
-    int cur_state = moveBlock->cur_state;
+int check_area(Block *block, int state, int x, int y) {
+    int line = y - BOUNDARY_START_Y;
+    int column = x - BOUNDARY_START_X;
     for (int i = 0; i < SHAPE_SIZE; i++) {
 
         if (i != 0 && i % 4 == 0) {
             line++;
-            column = next_x - BOUNDARY_START_X;
+            column = x - BOUNDARY_START_X;
         }
 
-        if (moveBlock->cur_block->shape[cur_state][i] == 1 &&
+        if (block->shape[state][i] == 1 &&
             bitmap[line][column] == 1) {
             return 0;
         }
@@ -149,7 +150,21 @@ int has_enough_area(Move_Block *moveBlock, int next_x, int next_y) {
     return 1;
 }
 
-void block_move_down(Move_Block *moveBlock) {
+/**
+ * 判断当前方块下方是否还有足够的下落空间
+ * @param moveBlock
+ * @return 0 没有足够下落空间 1 有足够下落空间
+ */
+int has_enough_area(Move_Block *moveBlock, int next_x, int next_y) {
+    return check_area(moveBlock->cur_block, moveBlock->cur_state, next_x, next_y);
+}
+
+/**
+ * 向下移动方块
+ * @param moveBlock
+ * @return 0 方块没有移动到底  1 方块移动到底
+ */
+int block_move_down(Move_Block *moveBlock) {
     int curState = moveBlock->cur_state;
     int height = moveBlock->cur_block->shape[curState][SHAPE_SIZE + 1];
 
@@ -159,12 +174,13 @@ void block_move_down(Move_Block *moveBlock) {
         store_block(moveBlock);//保存图案
         update_bitmap();//这里不清除原图像也无所谓，刷新Bitmap的时候会覆盖掉
         next_block();
-        return;
+        return 1;
     }
 
     erase_block(moveBlock);
     moveBlock->y++;
     print_block(moveBlock);
+    return 0;
 }
 
 void block_move_left(Move_Block *moveBlock) {
@@ -180,7 +196,7 @@ void block_move_left(Move_Block *moveBlock) {
 void block_move_right(Move_Block *moveBlock) {
     int curState = moveBlock->cur_state;
     int width = moveBlock->cur_block->shape[curState][SHAPE_SIZE];
-    //最右边一格的坐标是(moveBlock->x + width * 2 - 1)，然后移动一位需要加1，所以这边的判断是(moveBlock->x + width * 2)
+    //最右边一格的坐标是(moveBlock->x + width * 2 - 1)，然后移动一位需要加2，所以这边的判断是(moveBlock->x + width * 2 + 1)
     int end_x = (moveBlock->x + width * 2 - 1) + 2;
     if (end_x > BOUNDARY_END_X || !has_enough_area(moveBlock, end_x, moveBlock->y)) {
         //如果碰到右边界，则不进行移动操作
