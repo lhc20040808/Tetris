@@ -277,7 +277,3 @@ void erase_block(Move_Block *m_block) {
     fflush(NULL);
 }
 
-void block_down_to_bottom() {
-
-}
-

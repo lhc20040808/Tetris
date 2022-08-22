@@ -117,6 +117,10 @@ void block_rotate(Move_Block *moveBlock) {
         return;
     }
 
+    if(moveBlock->y + moveBlock->cur_block->shape[next_state][SHAPE_SIZE + 1]  > BOUNDARY_END_Y){
+        return;
+    }
+
     //如果旋转后没有足够空间，则不旋转
     if (!check_area(moveBlock->cur_block, next_state, moveBlock->x, moveBlock->y)) {
         return;
