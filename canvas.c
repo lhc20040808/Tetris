@@ -3,7 +3,7 @@
 /**
  * 位图
  */
-char bitmap[BOUNDARY_END_Y - BOUNDARY_START_Y + 1][BOUNDARY_END_X - BOUNDARY_START_X + 1] = {0};
+static char bitmap[BOUNDARY_END_Y - BOUNDARY_START_Y + 1][BOUNDARY_END_X - BOUNDARY_START_X + 1] = {0};
 
 void drawInfo(int score, int level) {
     printf("\033[%d;%dH分数：%d \033[0m", CANVAS_SCORE_Y, CANVAS_INFO_X, score);
@@ -39,6 +39,26 @@ void init_game_ui() {
     fflush(NULL);
 }
 
+void store_block(Move_Block *moveBlock) {
+    int line = moveBlock->y - BOUNDARY_START_Y;
+    int column = moveBlock->x - BOUNDARY_START_X;
+    int cur_state = moveBlock->cur_state;
+    for (int i = 0; i < SHAPE_SIZE; i++) {
+
+        if (i != 0 && i % 4 == 0) {
+            line++;
+            column = moveBlock->x - BOUNDARY_START_X;
+        }
+
+        if (moveBlock->cur_block->shape[cur_state][i] == 1) {
+            bitmap[line][column] = 1;
+            bitmap[line][column + 1] = 1;
+        }
+
+        column += 2;
+    }
+}
+
 /**
  * 旋转方块
  * @param moveBlock
@@ -67,18 +87,41 @@ void block_rotate(Move_Block *moveBlock) {
 }
 
 void block_move_down(Move_Block *moveBlock) {
+    int curState = moveBlock->cur_state;
+    int height = moveBlock->cur_block->shape[curState][SHAPE_SIZE + 1];
+
+    //检查是否撞底，撞底则保存图案
+    //最下边一格的坐标是(moveBlock->y + height - 1)，然后移动一位需要加1，所以这边的判断是(moveBlock->y + height)
+    if (moveBlock->y + height > BOUNDARY_END_Y) {
+        erase_block(moveBlock);
+        store_block(moveBlock);//保存图案
+        return;
+    }
+
     erase_block(moveBlock);
     moveBlock->y++;
     print_block(moveBlock);
 }
 
 void block_move_left(Move_Block *moveBlock) {
+    if (moveBlock->x - 1 < BOUNDARY_START_X) {
+        //如果碰到左边界，则不进行任何移动操作
+        return;
+    }
     erase_block(moveBlock);
     moveBlock->x--;
     print_block(moveBlock);
 }
 
 void block_move_right(Move_Block *moveBlock) {
+    int curState = moveBlock->cur_state;
+    int width = moveBlock->cur_block->shape[curState][SHAPE_SIZE];
+
+    //最右边一格的坐标是(moveBlock->x + width * 2 - 1)，然后移动一位需要加1，所以这边的判断是(moveBlock->x + width * 2)
+    if (moveBlock->x + width * 2 > BOUNDARY_END_X) {
+        //如果碰到右边界，则不进行移动操作
+        return;
+    }
     erase_block(moveBlock);
     moveBlock->x++;
     print_block(moveBlock);

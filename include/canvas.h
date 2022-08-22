@@ -2,7 +2,7 @@
 #define TETRIS_CANVAS_H
 
 #include <stdio.h>
-#include "include/block.h"
+#include "block.h"
 
 /**
  *   (10,5)              (40,5)      (56,5)

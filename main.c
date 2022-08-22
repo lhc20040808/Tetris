@@ -58,7 +58,6 @@ void key_down() {
     if (!cur_m_block) {
         return;
     }
-
     block_move_down(cur_m_block);
 }
 
@@ -66,24 +65,11 @@ void key_left() {
     if (!cur_m_block) {
         return;
     }
-
-    if (cur_m_block->x - 1 < BOUNDARY_START_X) {
-        //如果碰到左边界，则不进行任何移动操作
-        return;
-    }
-
     block_move_left(cur_m_block);
 }
 
 void key_right() {
     if (!cur_m_block) {
-        return;
-    }
-
-    int curState = cur_m_block->cur_state;
-    int width = cur_m_block->cur_block->shape[curState][SHAPE_SIZE];
-    if (cur_m_block->x + width * 2 + 1 > BOUNDARY_END_X) {
-        //如果碰到右边界，则不进行移动操作
         return;
     }
     block_move_right(cur_m_block);
