@@ -6,7 +6,7 @@ extern int user_level;
 /**
  * 位图
  */
-static char bitmap[BOUNDARY_END_Y - BOUNDARY_START_Y + 1][BOUNDARY_END_X - BOUNDARY_START_X + 1] = {0};
+static int bitmap[BOUNDARY_END_Y - BOUNDARY_START_Y + 1][BOUNDARY_END_X - BOUNDARY_START_X + 1] = {0};
 
 void drawInfo(int score, int level) {
     printf("\033[%d;%dH分数：%d \033[0m", CANVAS_SCORE_Y, CANVAS_INFO_X, score);
@@ -58,8 +58,8 @@ void store_block(Move_Block *moveBlock) {
         }
 
         if (moveBlock->cur_block->shape[cur_state][i] == 1) {
-            bitmap[line][column] = 1;
-            bitmap[line][column + 1] = 1;
+            bitmap[line][column] = moveBlock->cur_block->color;
+            bitmap[line][column + 1] = moveBlock->cur_block->color;
         }
 
         column += 2;
@@ -72,9 +72,9 @@ void store_block(Move_Block *moveBlock) {
 void update_bitmap() {
     for (int i = 0; i < BOUNDARY_END_Y - BOUNDARY_START_Y + 1; i++) {
         for (int j = 0; j < BOUNDARY_END_X - BOUNDARY_START_X + 1; j = j + 2) {
-            if (bitmap[i][j] == 1) {
+            if (bitmap[i][j] !=0 ) {
                 printf("\033[%d;%dH", i + BOUNDARY_START_Y, j + BOUNDARY_START_X);
-                printf("\033[%dm[]", 47);//保存下来的图形画成白色
+                printf("\033[%dm[]", bitmap[i][j]);//保存下来的图形画成白色
                 printf("\033[0m");
             }else{
                 printf("\033[%d;%dH  \033[0m", i + BOUNDARY_START_Y, j + BOUNDARY_START_X);
@@ -148,7 +148,7 @@ int check_area(Block *block, int state, int x, int y) {
         }
 
         if (block->shape[state][i] == 1 &&
-            bitmap[line][column] == 1) {
+            bitmap[line][column] != 0) {
             return 0;
         }
 
