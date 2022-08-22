@@ -9,4 +9,6 @@ void init_key_control(void (*up)(void), void (*down)(void), void (*left)(void),
 
 void start_key_control();
 
+void recover_termios();
+
 #endif //TETRIS_KEYBOARD_H

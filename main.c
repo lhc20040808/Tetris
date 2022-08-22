@@ -10,6 +10,8 @@
 Move_Block *cur_m_block = NULL;
 int next_block_index = -1;
 
+void exit_game();
+
 void print_blocks() {
     int x = 6;
     int y = 3;
@@ -116,13 +118,18 @@ void sig_handler(int signum) {
         return;
     }
     if (check_end_game()) {
-        printf("\033[32;9H**************   Game Over  **************\033[0m");
-        printf("\033[?25h");//显示光标
-        printf("\n\n");
-        exit(0);
+        exit_game();
     } else {
         key_down();
     }
+}
+
+void exit_game() {
+    printf("\033[32;9H**************   Game Over  **************\033[0m");
+    printf("\033[?25h");//显示光标
+    printf("\n\n");
+    recover_termios();
+    exit(0);
 }
 
 void init_next_index() {

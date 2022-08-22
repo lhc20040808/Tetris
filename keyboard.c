@@ -1,7 +1,3 @@
-//
-// Created by 李昊琛 on 2022/8/21.
-//
-
 #include "include/keyboard.h"
 
 void (*up_ptr)(void) = NULL;
@@ -13,6 +9,8 @@ void (*left_ptr)(void) = NULL;
 void (*right_ptr)(void) = NULL;
 
 void (*enter_ptr)(void) = NULL;
+
+struct termios term_old;
 
 /**
  * 初始化键盘监听
@@ -31,7 +29,7 @@ void init_key_control(void (*up)(void), void (*down)(void), void (*left)(void), 
 }
 
 int get_ch() {
-    struct termios term_raw, term_old;
+    struct termios term_raw;
     //保存当前属性
     tcgetattr(0, &term_old);
     //获取原始属性
@@ -42,6 +40,11 @@ int get_ch() {
     //恢复原来的属性
     tcsetattr(0, 0, &term_old);
     return ch;
+}
+
+void recover_termios() {
+    //恢复原来的属性
+    tcsetattr(0, 0, &term_old);
 }
 
 void start_key_control() {
