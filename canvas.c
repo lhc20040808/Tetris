@@ -1,6 +1,7 @@
 #include "include/canvas.h"
 
-extern void next_block();
+extern int user_score;
+extern int user_level;
 
 /**
  * 位图
@@ -75,6 +76,8 @@ void update_bitmap() {
                 printf("\033[%d;%dH", i + BOUNDARY_START_Y, j + BOUNDARY_START_X);
                 printf("\033[%dm[]", 47);//保存下来的图形画成白色
                 printf("\033[0m");
+            }else{
+                printf("\033[%d;%dH  \033[0m", i + BOUNDARY_START_Y, j + BOUNDARY_START_X);
             }
         }
     }
@@ -117,7 +120,7 @@ void block_rotate(Move_Block *moveBlock) {
         return;
     }
 
-    if(moveBlock->y + moveBlock->cur_block->shape[next_state][SHAPE_SIZE + 1]  > BOUNDARY_END_Y){
+    if (moveBlock->y + moveBlock->cur_block->shape[next_state][SHAPE_SIZE + 1] > BOUNDARY_END_Y) {
         return;
     }
 
@@ -169,6 +172,8 @@ int has_enough_area(Move_Block *moveBlock, int next_x, int next_y) {
  * @return 0 方块没有移动到底  1 方块移动到底
  */
 int block_move_down(Move_Block *moveBlock) {
+    extern void next_block();
+
     int curState = moveBlock->cur_state;
     int height = moveBlock->cur_block->shape[curState][SHAPE_SIZE + 1];
 
@@ -176,6 +181,8 @@ int block_move_down(Move_Block *moveBlock) {
     //最下边一格的坐标是(moveBlock->y + height - 1)，然后移动一位需要加1，所以这边的判断是(moveBlock->y + height)
     if (moveBlock->y + height > BOUNDARY_END_Y || !has_enough_area(moveBlock, moveBlock->x, moveBlock->y + 1)) {
         store_block(moveBlock);//保存图案
+        destroy_cond_line();
+        drawInfo(user_score, user_level);
         update_bitmap();//这里不清除原图像也无所谓，刷新Bitmap的时候会覆盖掉
         next_block();
         return 1;
@@ -209,6 +216,39 @@ void block_move_right(Move_Block *moveBlock) {
     erase_block(moveBlock);
     moveBlock->x += 2;
     print_block(moveBlock);
+}
+
+void destroy_cond_line() {
+    extern void start_timer(int interval);
+    extern int drop_interval;
+
+    int full_flag;
+    for (int i = 0; i < BOUNDARY_END_Y - BOUNDARY_START_Y + 1; i++) {
+        full_flag = 1;
+        for (int j = 0; j < BOUNDARY_END_X - BOUNDARY_START_X + 1; j++) {
+            if (bitmap[i][j] == 0) {
+                full_flag = 0;
+                break;
+            }
+        }
+
+        if (!full_flag) {
+            continue;
+        }
+
+        user_score += 10;
+        if (user_score != 0 && user_score % 100 == 0) {
+            user_level++;
+            drop_interval /= 2;
+            start_timer(drop_interval);
+        }
+        //从第i-1行开始，依次把每行下移一行
+        for (int k = i; k > 0; k--) {
+            for (int j = 0; j < BOUNDARY_END_X - BOUNDARY_START_X + 1; j++) {
+                bitmap[k][j] = bitmap[k - 1][j];
+            }
+        }
+    }
 }
 
 

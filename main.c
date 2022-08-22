@@ -8,7 +8,20 @@
 #include "include/canvas.h"
 
 Move_Block *cur_m_block = NULL;
+
 int next_block_index = -1;
+/**
+ * 掉落间隔，单位微秒
+ */
+int drop_interval = 800 * 1000;
+/**
+ * 用户游戏等级
+ */
+int user_level = 0;
+/**
+ * 用户游戏分数
+ */
+int user_score = 0;
 
 void exit_game();
 
@@ -147,7 +160,7 @@ void start_timer(int interval) {
 }
 
 void start_game() {
-    start_timer(800 * 1000);//启动定时器
+    start_timer(drop_interval);//启动定时器
     start_key_control();//启动键盘监听，进入死循环直到按q退出
 }
 

@@ -63,4 +63,6 @@ extern int has_enough_area(Move_Block *moveBlock, int next_x, int next_y);
 
 int check_area(Block *block, int state, int x, int y);
 
+void destroy_cond_line();
+
 #endif //TETRIS_CANVAS_H
