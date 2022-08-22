@@ -22,7 +22,6 @@ void print_blocks() {
     }
 }
 
-
 void show_next_block() {
     Move_Block tmp;
     tmp.x = NEXT_BLOCK_X;
@@ -45,6 +44,27 @@ void generate_blocks(Move_Block *m_block) {
     m_block->cur_state = 0;
     m_block->cur_block = &shapes[next_block_index];
     next_block_index = (int) random() % BLOCK_SIZE;
+}
+
+/**
+ *
+ * @return 0 游戏结束 1游戏结束
+ */
+int check_end_game() {
+    if (cur_m_block == NULL) {
+        return 0;
+    }
+
+    //方块当前位置大于起始行位置就不判了，说明在下落过程中
+    if (cur_m_block->y > BLOCK_SHOW_Y) {
+        return 0;
+    }
+
+    if (has_enough_area(cur_m_block, cur_m_block->x, cur_m_block->y)) {
+        return 0;
+    }
+
+    return 1;
 }
 
 void key_up() {
@@ -87,7 +107,17 @@ void key_enter() {
  * @param signum
  */
 void sig_handler(int signum) {
-    key_down();
+    if(signum != SIGALRM){
+        return;
+    }
+    if (check_end_game()) {
+        printf("\033[32;9H**************   Game Over  **************\033[0m");
+        printf("\033[?25h");//显示光标
+        printf("\n\n");
+        exit(0);
+    } else {
+        key_down();
+    }
 }
 
 void init_next_index() {
@@ -109,13 +139,19 @@ void start_game() {
     start_key_control();//启动键盘监听，进入死循环直到按q退出
 }
 
+void next_block() {
+    generate_blocks(cur_m_block);
+    erase_next_area();
+    show_next_block();
+}
+
 int main(int argc, const char *argv[]) {
     init_next_index();
     init_key_control(key_up, key_down, key_left, key_right, key_enter);//注册键盘监听
+    init_game_ui();//绘制游戏Ui
     //初始化一个块
     cur_m_block = malloc(sizeof(Move_Block));
     generate_blocks(cur_m_block);
-    init_game_ui();//绘制游戏Ui
     show_next_block();
     print_block(cur_m_block);//显示块
     start_game();
