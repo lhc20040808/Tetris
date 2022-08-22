@@ -25,14 +25,8 @@ extern Block shapes[];
 
 extern void print_all_type_of_block(int x, int y, Block *b);
 
-extern void block_rotate(Move_Block *moveBlock);
-
-extern void block_move_down(Move_Block *moveBlock);
-
-extern void block_move_left(Move_Block *moveBlock);
-
-extern void block_move_right(Move_Block *moveBlock);
-
 extern void print_block(Move_Block *m_block);
+
+extern void erase_block(Move_Block *m_block);
 
 #endif

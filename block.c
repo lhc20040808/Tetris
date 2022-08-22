@@ -277,38 +277,6 @@ void erase_block(Move_Block *m_block) {
     fflush(NULL);
 }
 
-/**
- * 旋转方块
- * @param moveBlock
- * @param right 0朝左旋转，1朝右旋转
- */
-void block_rotate(Move_Block *moveBlock) {
-    //删除原图像
-    erase_block(moveBlock);
-    //旋转
-    moveBlock->cur_state = (moveBlock->cur_state + 1) % (moveBlock->cur_block->state_count);
-    //绘制图像
-    print_block(moveBlock);
-}
-
-void block_move_down(Move_Block *moveBlock) {
-    erase_block(moveBlock);
-    moveBlock->y++;
-    print_block(moveBlock);
-}
-
-void block_move_left(Move_Block *moveBlock) {
-    erase_block(moveBlock);
-    moveBlock->x--;
-    print_block(moveBlock);
-}
-
-void block_move_right(Move_Block *moveBlock) {
-    erase_block(moveBlock);
-    moveBlock->x++;
-    print_block(moveBlock);
-}
-
 void block_down_to_bottom() {
 
 }

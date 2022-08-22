@@ -2,6 +2,7 @@
 #define TETRIS_CANVAS_H
 
 #include <stdio.h>
+#include "include/block.h"
 
 /**
  *   (10,5)              (40,5)      (56,5)
@@ -20,6 +21,9 @@
  *      |                   |          |
  *      --------------------------------
  *   (10,30)             (40,30)    (56,30)
+ *
+ *   有24行，28列，由于不考虑保存颜色信息，统一用白色展示，所以用位图其实最节约空间。
+ *   但C中没有bit类型，用位域操作有点麻烦，所以声明成char类型的二维数组
  */
 
 #define CANVAS_START_X 10
@@ -44,5 +48,13 @@
 #define BOUNDARY_END_Y (CANVAS_END_Y - 1)
 
 extern void init_game_ui();
+
+extern void block_rotate(Move_Block *moveBlock);
+
+extern void block_move_down(Move_Block *moveBlock);
+
+extern void block_move_left(Move_Block *moveBlock);
+
+extern void block_move_right(Move_Block *moveBlock);
 
 #endif //TETRIS_CANVAS_H
