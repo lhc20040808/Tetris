@@ -168,12 +168,12 @@ void block_move_down(Move_Block *moveBlock) {
 }
 
 void block_move_left(Move_Block *moveBlock) {
-    if (moveBlock->x - 1 < BOUNDARY_START_X || !has_enough_area(moveBlock, moveBlock->x - 1, moveBlock->y)) {
+    if (moveBlock->x - 2 < BOUNDARY_START_X || !has_enough_area(moveBlock, moveBlock->x - 2, moveBlock->y)) {
         //如果碰到左边界，则不进行任何移动操作
         return;
     }
     erase_block(moveBlock);
-    moveBlock->x--;
+    moveBlock->x -= 2;
     print_block(moveBlock);
 }
 
@@ -181,13 +181,13 @@ void block_move_right(Move_Block *moveBlock) {
     int curState = moveBlock->cur_state;
     int width = moveBlock->cur_block->shape[curState][SHAPE_SIZE];
     //最右边一格的坐标是(moveBlock->x + width * 2 - 1)，然后移动一位需要加1，所以这边的判断是(moveBlock->x + width * 2)
-    int end_x = (moveBlock->x + width * 2 - 1) + 1;
+    int end_x = (moveBlock->x + width * 2 - 1) + 2;
     if (end_x > BOUNDARY_END_X || !has_enough_area(moveBlock, end_x, moveBlock->y)) {
         //如果碰到右边界，则不进行移动操作
         return;
     }
     erase_block(moveBlock);
-    moveBlock->x++;
+    moveBlock->x += 2;
     print_block(moveBlock);
 }
 
