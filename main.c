@@ -75,6 +75,10 @@ void key_enter() {
     printf("enter\n");
 }
 
+/**
+ * 监听信号量的回调函数
+ * @param signum
+ */
 void sig_handler(int signum) {
     key_down();
 }
@@ -100,11 +104,11 @@ void start_game() {
 
 int main(int argc, const char *argv[]) {
     init_next_index();
-    init_game_ui();//绘制游戏Ui
     init_key_control(key_up, key_down, key_left, key_right, key_enter);//注册键盘监听
     //初始化一个块
     cur_m_block = malloc(sizeof(Move_Block));
     generate_blocks(cur_m_block);
+    init_game_ui();//绘制游戏Ui
     show_next_block();
     print_block(cur_m_block);//显示块
     start_game();
